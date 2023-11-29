@@ -24,6 +24,7 @@ const formSchema = z.object({
 
 export const StoreModal = () => {
   const storeModal = useStoreModal();
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,7 +55,7 @@ export const StoreModal = () => {
                   <FormItem>
                     <FormLabel>Nome</FormLabel>
                     <FormControl>
-                      <Input placeholder="Nome do E-Commerce" {...field} />
+                      <Input placeholder="Nome da loja" {...field} />
                     </FormControl>
                     <FormMessage/>
                   </FormItem>
