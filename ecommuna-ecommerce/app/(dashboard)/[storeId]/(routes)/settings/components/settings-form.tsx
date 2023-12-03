@@ -21,6 +21,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { AlertModal } from "@/components/modals/alert-modal";
+import { ApiAlert } from "@/components/ui/api-alert";
 
 interface ISettingsFormProps {
   initialData: Store;
@@ -56,8 +58,29 @@ export const SettingsForm: React.FC<ISettingsFormProps> = ({ initialData }) => {
     }
   }
 
+  const onDelete = async () => {
+    try {
+      setLoading(true)
+      await axios.delete(`/api/stores/${params.storeId}`)
+      router.refresh();
+      router.push("/")
+      toast.success("Loja deletada.");
+    } catch(error){
+      toast.error("Certifique-se de remover todos os produtos e categorias primeiro.")
+    } finally {
+      setLoading(false)
+      setOpen(false)
+    }
+  }
+
     return (
       <>
+        <AlertModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={onDelete}
+        loading={loading}
+        />
         <div className="flex items-center justify-between">
           <Heading
             title="Configurações"
@@ -103,6 +126,12 @@ export const SettingsForm: React.FC<ISettingsFormProps> = ({ initialData }) => {
             </Button>
           </form>
         </Form>
+        <Separator />
+        <ApiAlert
+          title="NEXT_PUBLIC_API_URL"
+          description={`${origin}/api/${params.storeId}`}
+          variant={"public"}
+        />
       </>
     );
   };
