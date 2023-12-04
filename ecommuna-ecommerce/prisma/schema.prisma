@@ -20,7 +20,7 @@ model Store {
   updatedAt DateTime @updatedAt
 }
 
-model Billboard{
+model Billboard {
   id        String @id @default(uuid())
   storeId   String
   store     Store @relation("StoreToBillboard", fields: [storeId], references: [id])
