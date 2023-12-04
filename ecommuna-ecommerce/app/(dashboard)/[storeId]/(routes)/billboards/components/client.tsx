@@ -7,6 +7,7 @@ import { columns } from "./columns";
 import { BillboardColumn } from "./columns";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
+import { ApiList } from "@/components/ui/api-list";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/ui/data-table";
 
@@ -32,7 +33,10 @@ export const BillboardClient = ({data}: IBillboardClientProps) => {
                 </Button>
             </div>
             <Separator/>
-            <DataTable columns={columns} data={data}/>
+            <DataTable searchKey="label" columns={columns} data={data}/>
+            <Heading title="API" description="Chamadas da API para os billboards"/>
+            <Separator/>
+            <ApiList entityName="billboards" entityIdName="billboardId"/>
         </>
     )
 }
