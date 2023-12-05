@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 export async function GET(
-    _req: Request,
+    req: Request,
     { params }: { params: { billboardId: string } }
   ) {
     try {
@@ -78,7 +78,7 @@ export async function PATCH(
 };
 
 export async function DELETE(
-  _req: Request,
+  req: Request,
   { params }: { params: { storeId: string, billboardId: string } }
 ) {
   try {
