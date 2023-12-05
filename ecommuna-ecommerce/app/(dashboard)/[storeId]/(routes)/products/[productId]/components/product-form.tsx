@@ -23,8 +23,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { AlertModal } from "@/components/modals/alert-modal";
 import ImageUpload from "@/components/ui/image-upload";
-import { useOrigin } from "@/hooks/use-origin";
-
 const formSchema = z.object({
   name: z.string().min(1),
   images: z.object({ url: z.string()}).array(),
@@ -162,7 +160,7 @@ export const ProductForm: React.FC<IProductFormProps> = ({ initialData }) => {
           <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
-              name="label"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nome</FormLabel>
