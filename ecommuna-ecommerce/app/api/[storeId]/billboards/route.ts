@@ -3,7 +3,6 @@ import { auth } from "@clerk/nextjs";
 
 import prismadb from "@/lib/prismadb";
 
-//API para criar uma loja! :)
 
 export async function POST(
     req: Request,
