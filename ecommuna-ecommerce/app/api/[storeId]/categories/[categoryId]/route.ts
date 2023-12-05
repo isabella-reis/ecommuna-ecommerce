@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 export async function GET(
-    _req: Request,
+    req: Request,
     { params }: { params: { categoryId: string } }
   ) {
     try {
@@ -13,7 +13,7 @@ export async function GET(
 
       const category = await prismadb.category.findUnique({
         where: {
-          id: params.categoryId,
+          id: params.categoryId
         },
       });
   
@@ -32,6 +32,7 @@ export async function PATCH(
     const { userId } = auth();
     const body = await req.json();
     const { name, billboardId } = body;
+
 
     if (!userId) {
       return new NextResponse("Não autenticado", { status: 401 });
@@ -62,7 +63,7 @@ export async function PATCH(
 
     const category = await prismadb.category.updateMany({
       where: {
-        id: params.categoryId,
+        id: params.categoryId
       },
       data: {
         name,
@@ -78,7 +79,7 @@ export async function PATCH(
 };
 
 export async function DELETE(
-  _req: Request,
+  req: Request,
   { params }: { params: { storeId: string, categoryId: string } }
 ) {
   try {
@@ -105,7 +106,7 @@ export async function DELETE(
 
     const category = await prismadb.category.delete({
       where: {
-        id: params.categoryId,
+        id: params.categoryId
       },
     });
 

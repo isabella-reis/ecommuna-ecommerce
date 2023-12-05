@@ -27,7 +27,7 @@ import { useOrigin } from "@/hooks/use-origin";
 
 const formSchema = z.object({
   label: z.string().min(1),
-  imageUrl: z.string().min(1),
+  imageUrl: z.string().min(1)
 });
 
 type BillboardFormValues = z.infer<typeof formSchema>;
@@ -36,9 +36,7 @@ interface IBillboardFormProps {
   initialData: Billboard | null;
 }
 
-export const BillboardForm: React.FC<IBillboardFormProps> = ({
-  initialData,
-}) => {
+export const BillboardForm: React.FC<IBillboardFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
 
@@ -46,43 +44,35 @@ export const BillboardForm: React.FC<IBillboardFormProps> = ({
   const [loading, setLoading] = useState(false);
 
   const title = initialData ? "Editar billboard" : "Criar billboard";
-  const description = initialData
-    ? "Editar um billboard"
-    : "Adicionar um novo billboard";
-  const toastMessage = initialData
-    ? "Billboard atualizado."
-    : "Billboard criado.";
+  const description = initialData ? "Editar um billboard" : "Adicionar um novo billboard";
+  const toastMessage = initialData ? "Billboard atualizado." : "Billboard criado.";
   const action = initialData ? "Salvar alterações" : "Criar";
 
   const form = useForm<BillboardFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
-      label: "",
-      imageUrl: "",
-    },
+      label: '',
+      imageUrl: ''
+    }
   });
 
   const onSubmit = async (data: BillboardFormValues) => {
     try {
       setLoading(true);
-      if (initialData) {
-        await axios.patch(
-          `/api/${params.storeId}/billboards/${params.billboardId},`,
-          data
-        );
-      } else {
+      if(initialData){
+        await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, data);
+      }else{
         await axios.post(`/api/${params.storeId}/billboards`, data);
       }
-      router.refresh();
-      router.push(`/${params.storeId}/billboards`);
-      toast.success(toastMessage);
+      router.refresh()
+      router.push(`/${params.storeId}/billboards`)
+      toast.success(toastMessage)
     } catch (error) {
       toast.error("Algo deu errado. :(");
     } finally {
       setLoading(false);
     }
-  };
-
+  }
   const onDelete = async () => {
     try {
       setLoading(true);

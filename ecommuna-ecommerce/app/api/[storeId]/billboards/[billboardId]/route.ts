@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 export async function GET(
-    req: Request,
+    _req: Request,
     { params }: { params: { billboardId: string } }
   ) {
     try {
@@ -16,7 +16,7 @@ export async function GET(
           id: params.billboardId,
         },
       });
-  
+
       return NextResponse.json(billboard);
     } catch (error) {
       console.log("BILLBOARD_GET", error);
@@ -57,7 +57,7 @@ export async function PATCH(
     });
 
     if (!storeByUserId){
-        return new NextResponse("Não autorizado", { status: 405 });
+        return new NextResponse("Não autorizado", { status: 403 });
     }
 
     const billboard = await prismadb.billboard.updateMany({
@@ -78,7 +78,7 @@ export async function PATCH(
 };
 
 export async function DELETE(
-  req: Request,
+  _req: Request,
   { params }: { params: { storeId: string, billboardId: string } }
 ) {
   try {
@@ -100,10 +100,10 @@ export async function DELETE(
     });
 
     if (!storeByUserId){
-        return new NextResponse("Não autorizado", { status: 405 });
+        return new NextResponse("Não autorizado", { status: 403 });
     }
 
-    const billboard = await prismadb.billboard.delete({
+    const billboard = await prismadb.billboard.deleteMany({
       where: {
         id: params.billboardId,
       },
@@ -115,5 +115,3 @@ export async function DELETE(
     return new NextResponse("Erro interno", { status: 500 });
   }
 };
-
-

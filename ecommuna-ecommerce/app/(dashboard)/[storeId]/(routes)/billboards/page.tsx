@@ -3,7 +3,6 @@ import {format} from 'date-fns'
 
 import { BillboardClient } from "./components/client";
 import { BillboardColumn } from "./components/columns";
-import { ptBR } from "date-fns/locale";
 
 const BillboardsPage = async ({ params }: { params: { storeId: string } }) => {
   const billboards = await prismadb.billboard.findMany({

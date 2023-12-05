@@ -32,7 +32,7 @@ import { AlertModal } from "@/components/modals/alert-modal";
 
 const formSchema = z.object({
   name: z.string().min(1),
-  billboardId: z.string().min(1),
+  billboardId: z.string().min(1)
 });
 
 type CategoryFormValues = z.infer<typeof formSchema>;
@@ -53,19 +53,15 @@ export const CategoryForm: React.FC<ICategoryFormProps> = ({
   const [loading, setLoading] = useState(false);
 
   const title = initialData ? "Editar categoria" : "Criar categoria";
-  const description = initialData
-    ? "Editar uma categoria"
-    : "Adicionar uma nova categoria";
-  const toastMessage = initialData
-    ? "Categoria atualizada."
-    : "Categoria criada.";
+  const description = initialData ? "Editar uma categoria" : "Adicionar uma nova categoria";
+  const toastMessage = initialData ? "Categoria atualizada." : "Categoria criada.";
   const action = initialData ? "Salvar alterações" : "Criar";
 
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
-      name: "",
-      billboardId: "",
+      name: '',
+      billboardId: '',
     },
   });
 
@@ -74,7 +70,7 @@ export const CategoryForm: React.FC<ICategoryFormProps> = ({
       setLoading(true);
       if (initialData) {
         await axios.patch(
-          `/api/${params.storeId}/categories/${params.categoryId},`,
+          `/api/${params.storeId}/categories/${params.categoryId}`,
           data
         );
       } else {
