@@ -9,23 +9,33 @@ import { useForm } from "react-hook-form";
 import { useParams, useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { AlertModal } from "@/components/modals/alert-modal";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import ImageUpload from "@/components/ui/image-upload";
+import { AlertModal } from "@/components/modals/alert-modal";
+
 const formSchema = z.object({
   name: z.string().min(1),
-  images: z.object({ url: z.string()}).array(),
+  images: z.object({ url: z.string() }).array(),
   price: z.coerce.number().min(1),
   categoryId: z.string().min(1),
   colorId: z.string().min(1),
@@ -37,12 +47,22 @@ const formSchema = z.object({
 type ProductFormValues = z.infer<typeof formSchema>;
 
 interface IProductFormProps {
-  initialData: Product & {
-    images: Image[]
-  } | null;
-};
+  initialData:
+    | (Product & {
+        images: Image[];
+      })
+    | null;
+  categories: Category[];
+  colors: Color[];
+  sizes: Size[];
+}
 
-export const ProductForm: React.FC<IProductFormProps> = ({ initialData }) => {
+export const ProductForm: React.FC<IProductFormProps> = ({
+  initialData,
+  categories,
+  colors,
+  sizes,
+}) => {
   const params = useParams();
   const router = useRouter();
 
@@ -64,12 +84,12 @@ export const ProductForm: React.FC<IProductFormProps> = ({ initialData }) => {
           price: parseFloat(String(initialData?.price)),
         }
       : {
-          name: '',
+          name: "",
           images: [],
           price: 0,
-          categoryId: '',
-          colorId: '',
-          sizeId: '',
+          categoryId: "",
+          colorId: "",
+          sizeId: "",
           isFeatured: false,
           isArchived: false,
         },
@@ -80,7 +100,7 @@ export const ProductForm: React.FC<IProductFormProps> = ({ initialData }) => {
       setLoading(true);
       if (initialData) {
         await axios.patch(
-          `/api/${params.storeId}/produtos/${params.productId}`,
+          `/api/${params.storeId}/products/${params.productId}`,
           data
         );
       } else {
@@ -104,7 +124,7 @@ export const ProductForm: React.FC<IProductFormProps> = ({ initialData }) => {
       toast.success("Produto deletada.");
     } catch (error) {
       toast.error(
-        "Certifique-se de remover todas as categorias que utilizam esse produto primeiro."
+        "Algo deu errado. :("
       );
     } finally {
       setLoading(false);
@@ -147,10 +167,16 @@ export const ProductForm: React.FC<IProductFormProps> = ({ initialData }) => {
                 <FormLabel>Imagens</FormLabel>
                 <FormControl>
                   <ImageUpload
-                    value={field.value.map((image) => image.url)} 
-                    disabled={loading} 
-                    onChange={(url) => field.onChange([...field.value, { url }])}
-                    onRemove={(url) => field.onChange([...field.value.filter((current) => current.url !== url)])}
+                    value={field.value.map((image) => image.url)}
+                    disabled={loading}
+                    onChange={(url) =>
+                      field.onChange([...field.value, { url }])
+                    }
+                    onRemove={(url) =>
+                      field.onChange([
+                        ...field.value.filter((current) => current.url !== url),
+                      ])
+                    }
                   />
                 </FormControl>
                 <FormMessage />
@@ -172,6 +198,162 @@ export const ProductForm: React.FC<IProductFormProps> = ({ initialData }) => {
                     />
                   </FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Preço</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      placeholder="9,99"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Categoria</FormLabel>
+                  <Select
+                    disabled={loading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Selecione uma categoria"
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="sizeId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Categoria</FormLabel>
+                  <Select
+                    disabled={loading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Selecione um tamanho"
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {sizes.map((size) => (
+                        <SelectItem key={size.id} value={size.id}>
+                          {size.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="colorId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Categoria</FormLabel>
+                  <Select
+                    disabled={loading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Selecione uma cor"
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {colors.map((color) => (
+                        <SelectItem key={color.id} value={color.id}>
+                          {color.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="isFeatured"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox 
+                    checked={field.value}
+                    onCheckedChange={field.onChange}/>
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Lançado
+                    </FormLabel>
+                    <FormDescription>
+                      Esse produto irá aparecer na página inicial de sua loja.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="isArchived"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox 
+                    checked={field.value}
+                    onCheckedChange={field.onChange}/>
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Arquivado
+                    </FormLabel>
+                    <FormDescription>
+                      Esse produto não irá aparecer na página de sua loja.
+                    </FormDescription>
+                  </div>
                 </FormItem>
               )}
             />

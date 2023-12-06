@@ -13,13 +13,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { BillboardColumn } from "./columns";
+import { ProductColumn } from "./columns";
 import { Button } from "@/components/ui/button";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 
 interface ICellActionProps {
-  data: BillboardColumn;
+  data: ProductColumn;
 }
 
 export const CellAction: React.FC<ICellActionProps> = ({ data }) => {
@@ -38,13 +38,13 @@ export const CellAction: React.FC<ICellActionProps> = ({ data }) => {
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${params.storeId}/billboards/${data.id}`
+        `/api/${params.storeId}/products/${data.id}`
       );
       router.refresh();
-      toast.success("Billboard deletada.");
+      toast.success("Produto deletado.");
     } catch (error) {
       toast.error(
-        "Certifique-se de remover todas as categorias que utilizam esse billboard primeiro."
+        "Algo deu errado. :("
       );
     } finally {
       setLoading(false);
@@ -75,7 +75,7 @@ export const CellAction: React.FC<ICellActionProps> = ({ data }) => {
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() =>
-              router.push(`/${params.storeId}/billboards/${data.id}`)
+              router.push(`/${params.storeId}/products/${data.id}`)
             }
           >
             <Edit className="mr-2 h-4 w-4" />
